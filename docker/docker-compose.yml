@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+
+  db:
+    image: postgres:12-alpine
+    ports:
+      - "${DB_PORT}:5432"
+    networks:
+      - local
+    volumes:
+      - ./db.sql:/docker-entrypoint-initdb.d/10-create-tables.sql
+    environment:
+      POSTGRES_USER:     ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB:       ${DB_NAME}
+
+  api:
+    build: ../api
+    ports:
+      - "${API_PORT}:3000"
+    networks:
+      - local
+    environment:
+      DB_HOST:    db
+      DB_PORT:    ${DB_PORT}
+      DB_USER:    ${DB_USER}
+      DB_PASS:    ${DB_PASS}
+      DB_NAME:    ${DB_NAME}
+      JWT_SECRET: ${JWT_SECRET}
+
+  frontend:
+    build:
+      context: ../frontend
+      args:
+        API_URL: http://localhost:${API_PORT}/
+    ports:
+      - "${FRONTEND_PORT}:5000"
+    networks:
+      - local
+
+networks:
+  local:
+    driver: bridge
