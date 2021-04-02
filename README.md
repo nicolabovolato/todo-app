@@ -5,6 +5,7 @@ A multi user todo app powered by modern technologies.
 ### Run the app
 
  #### `docker-compose -p todo-app -f docker/docker-compose.yml --env-file .env.example up`
+ #### Open up [your browser](http://localhost:80)
 
 ## Technologies
 
