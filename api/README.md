@@ -17,7 +17,7 @@
  **DB_PORT** : database port       (eg. `5432`)\
  **DB_USER** : database user       (eg. `postgres`)\
  **DB_PASS** : database password   (eg. `postgres`)\
- **DB_NAME** : database name       (eg. `todos`)\
+ **DB_NAME** : database name       (eg. `todos`)
 
  **JWT_SECRET** : jwt token secret (eg. `secret`)
 
