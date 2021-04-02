@@ -33,5 +33,5 @@
 
 ## Caveats
 
- Because the code is run on the client browser, *env variables cannot be changed on the run*.
+ Because the code is run on the client browser, *env variables cannot be changed on the run*.\
  As a workaround, the Dockerfile will build the app declaring env variables as build ARGs.
