@@ -4,41 +4,46 @@ services:
 
   db:
     image: postgres:12-alpine
-    ports:
-      - "${DB_PORT}:5432"
-    networks:
-      - local
     volumes:
       - ./db.sql:/docker-entrypoint-initdb.d/10-create-tables.sql
+      - ./db:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER:     ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASS}
-      POSTGRES_DB:       ${DB_NAME}
+      POSTGRES_USER:     ${DB_USER:-portgres}
+      POSTGRES_PASSWORD: ${DB_PASS:-portgres}
+      POSTGRES_DB:       ${DB_NAME:-todos}
 
   api:
     build: ../api
-    ports:
-      - "${API_PORT}:3000"
-    networks:
-      - local
     environment:
       DB_HOST:    db
-      DB_PORT:    ${DB_PORT}
-      DB_USER:    ${DB_USER}
-      DB_PASS:    ${DB_PASS}
-      DB_NAME:    ${DB_NAME}
-      JWT_SECRET: ${JWT_SECRET}
+      DB_PORT:    5432
+      DB_USER:    ${DB_USER:-portgres}
+      DB_PASS:    ${DB_PASS:-portgres}
+      DB_NAME:    ${DB_NAME:-todos}
+      JWT_SECRET: ${JWT_SECRET-secret}
+    depends_on:
+        - db
 
   frontend:
     build:
       context: ../frontend
       args:
-        API_URL: http://localhost:${API_PORT}/
-    ports:
-      - "${FRONTEND_PORT}:5000"
-    networks:
-      - local
+        API_URL: https://${API_SUBDOMAIN:?run using the script}.loca.lt/
+    depends_on:
+      - lt-api
 
-networks:
-  local:
-    driver: bridge
+  lt-frontend:
+    build:
+      context: .
+      dockerfile: lt.Dockerfile
+    command: "lt --port 5000 --local-host frontend"
+    depends_on:
+      - frontend
+
+  lt-api:
+    build:
+      context: .
+      dockerfile: lt.Dockerfile
+    command: "lt --port 3000 --local-host api --subdomain ${API_SUBDOMAIN:?run using the script}"
+    depends_on:
+      - api

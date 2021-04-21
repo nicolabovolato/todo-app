@@ -1,14 +1,15 @@
 # Docker compose
 
-## Enviroment variables
+ To expose the app on the internet [localtunnel](https://localtunnel.me) has been used.
+ A python script is used to automates the subdomain generation and builds the frontend accordingly.
 
- **FRONTEND_PORT** : web app port    (eg. `80`)\
- **API_PORT**      : api port        (eg. `3000`)\
- **DB_PORT**       : databse port    (eg. `5432`)
+## Enviroment variables
 
  **DB_USER** : database user         (eg. `postgres`)\
  **DB_PASS** : database password     (eg. `postgres`)\
  **DB_NAME** : database name         (eg. `todos`)
 
  **JWT_SECRET** : jwt token secret   (eg. `secret`)
+
+ **API_SUBDOMAIN** : subdomain used by localtunnel, will be set by the python script
 
