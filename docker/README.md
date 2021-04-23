@@ -11,5 +11,5 @@
 
  **JWT_SECRET** : jwt token secret   (eg. `secret`)
 
- **API_SUBDOMAIN** : subdomain used by localtunnel, will be set by the python script
+ **API_SUBDOMAIN** : subdomain used by localtunnel, will be set by the python script\
  **USE_LOCALTUNNEL** : used by the script to add a custom header on the frontend for api requests
