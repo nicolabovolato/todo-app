@@ -1,8 +1,11 @@
 import { writable } from 'svelte/store'
 import axios from 'axios'
 
-const todosUrl = process.env.API_URL + 'todos/'
-const authUrl  = process.env.API_URL + 'auth/'
+// this headers bypasses localtunnel's reminder page
+if(process.env.LOCALTUNNEL_WORKAROUND) axios.defaults.headers.common['Bypass-Tunnel-Reminder'] = '*'
+
+const todoApi = axios.create({baseURL: process.env.API_URL + '/todos/'})
+const authApi = axios.create({baseURL: process.env.API_URL + '/auth/'})
 
 const getAccessToken  = () => localStorage.getItem('access_token')
 const getRefreshToken = () => localStorage.getItem('refresh_token')
@@ -31,7 +34,6 @@ const loggedInStore = (() => {
 export const loggedIn = {subscribe: loggedInStore.subscribe}
 
 // Access and refresh token management
-const todoApi = axios.create()
 todoApi.interceptors.request.use(
     async config => {
         config.headers.Authorization = 'Bearer ' + getAccessToken()
@@ -56,9 +58,9 @@ todoApi.interceptors.response.use(
 export const refresh = async() => {
 
     try{
-        const response = await axios({
+        const response = await authApi({
             method: 'post',
-            url: authUrl + 'refresh',
+            url: '/refresh',
             headers: { Authorization: 'Bearer '+ getRefreshToken() }
         })
 
@@ -73,7 +75,7 @@ export const refresh = async() => {
 // Api auth routes
 export const login = async (username, password) => {
 
-    const response = await axios.post(authUrl + 'login', {username, password})
+    const response = await authApi.post('/login', {username, password})
 
     setAccessToken(response.data.access_token)
     setRefreshToken(response.data.refresh_token)
@@ -88,7 +90,7 @@ export const logout = async() => {
 
 export const signup = async (username, password) => {
 
-    await axios.post(authUrl + 'signup', {username, password})
+    await authApi.post('/signup', {username, password})
 }
 
 // Api todo routes
@@ -101,21 +103,21 @@ export const getTodos = async () => {
 
 export const addTodo = async (title, description) => {
 
-    const response = await todoApi.post(todosUrl, {title, description, completed: false})
+    const response = await todoApi.post('/', {title, description, completed: false})
 
     return response.data
 }
 
 export const updateTodo = async (todo) => {
 
-    const response = await todoApi.put(todosUrl + todo.id, todo)
+    const response = await todoApi.put('/' + todo.id, todo)
 
     return response.data
 }
 
 export const deleteTodo = async (todo) => {
 
-    await todoApi.delete(todosUrl + todo.id)
+    await todoApi.delete('/' + todo.id)
 
     return todo
 }

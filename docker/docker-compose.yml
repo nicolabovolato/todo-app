@@ -29,6 +29,7 @@ services:
       context: ../frontend
       args:
         API_URL: https://${API_SUBDOMAIN:?run using the script}.loca.lt/
+        LOCALTUNNEL_WORKAROUND: ${USE_LOCALTUNNEL}
     depends_on:
       - lt-api
 

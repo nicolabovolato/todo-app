@@ -16,6 +16,7 @@
 ## Enviroment variables
 
  **API_URL** : api url (eg. `http://www.api.com/v1:3000`)
+ **LOCALTUNNEL_WORKAROUND** : adds a custom header to api requests to bypass localtunnel's reminder page
 
 ## Scripts
 

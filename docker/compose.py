@@ -23,6 +23,9 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 # set the subdomain env var
 os.environ['API_SUBDOMAIN'] = api_subdomain
 
+# tell the frontend we are using localtunnel
+os.environ['USE_LOCALTUNNEL'] = 'true'
+
 # stop the services
 print('Stopping services...')
 subprocess.check_call(['docker-compose', compose_args, 'down'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

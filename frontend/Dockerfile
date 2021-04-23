@@ -9,7 +9,9 @@ COPY . .
 
 # svelte cannot read enviroment variables, this is a workaround
 ARG API_URL
-RUN echo API_URL=$API_URL > .env
+ARG LOCALTUNNEL_WORKAROUND
+RUN echo API_URL=$API_URL                                > .env
+RUN echo LOCALTUNNEL_WORKAROUND=$LOCALTUNNEL_WORKAROUND >> .env
 RUN npm run build
 
 EXPOSE 5000
