@@ -3,6 +3,7 @@ version: '3.9'
 services:
 
   db:
+    container_name: db
     image: postgres:12-alpine
     volumes:
       - ./db.sql:/docker-entrypoint-initdb.d/10-create-tables.sql
@@ -13,6 +14,7 @@ services:
       POSTGRES_DB:       ${DB_NAME:-todos}
 
   api:
+    container_name: api
     build: ../api
     environment:
       DB_HOST:    db
@@ -25,6 +27,7 @@ services:
         - db
 
   frontend:
+    container_name: frontend
     build:
       context: ../frontend
       args:
@@ -34,6 +37,7 @@ services:
       - lt-api
 
   lt-frontend:
+    container_name: lt-frontend
     build:
       context: .
       dockerfile: lt.Dockerfile
@@ -42,6 +46,7 @@ services:
       - frontend
 
   lt-api:
+    container_name: lt-api
     build:
       context: .
       dockerfile: lt.Dockerfile
